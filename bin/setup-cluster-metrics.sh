@@ -78,7 +78,7 @@ then
 fi
 
 run_cmd echo "Setting up Hawkular metrics...this will run for some time in the background..."
-run_cmd run "oc process -f ${CONFDIR}/${METRICS} -v HAWKULAR_METRICS_HOSTNAME=${OSE_MASTER},USE_PERSISTENT_STORAGE=false | oc create -f -"
+run_cmd run "oc process -f ${CONFDIR}/${METRICS} -v -p MASTER_URL=https://kubernetes.default.svc.cluster.local:443,HAWKULAR_METRICS_HOSTNAME=${OSE_MASTER},USE_PERSISTENT_STORAGE=false | oc create -f -"
 
 OSE_MASTER_CONFIG=/etc/origin/master/master-config.yaml
 TIMESTAMP="`date +%d%m%y_%m%S`"
