@@ -4,7 +4,7 @@
 # Setup OSE centralised container logs using EFK
 #
 
-OSE_MASTER="openshift.example.com"
+OSE_MASTER="log.kalix.vagrant.f8"
 LIBDIR="../libs"
 CONFDIR="../conf"
 USER="demo"
@@ -66,7 +66,7 @@ run_cmd run "oadm policy add-cluster-role-to-user cluster-reader system:servicea
 
 
 LOGGING="logging.yaml"
-LOGGING_TEMPLATE="/usr/share/ansible/openshift-ansible/roles/openshift_examples/files/examples/infrastructure-templates/enterprise/logging-deployer.yaml"
+LOGGING_TEMPLATE="/usr/share/openshift/examples/infrastructure-templates/origin/logging-deployer.yaml"
 
 echo "Ensuring we have a logging config file..."
 if [ ! -r ${CONFDIR}/{LOGGING} ]
@@ -81,7 +81,7 @@ run_cmd echo "Setting up logging deployer using a template..."
 run_cmd run "oc create -n openshift -f ${CONFDIR}/${LOGGING}"
 
 run_cmd echo "Run the deployer (this will take some time to complete in the background)..."
-run_cmd run "oc process logging-deployer-template -n openshift -v KIBANA_HOSTNAME=kibana.example.com,ES_CLUSTER_SIZE=1,PUBLIC_MASTER_URL=https://localhost:8443 | oc create -f -"
+run_cmd run "oc process logging-deployer-template -n openshift -v KIBANA_HOSTNAME=kibana.kalix.vagrant.f8,ES_CLUSTER_SIZE=1,PUBLIC_MASTER_URL=https://localhost:8443 | oc create -f -"
 
 echo "Once the deployer completes, run this command:"
 echo "oc process logging-support-template | oc create -f -"
