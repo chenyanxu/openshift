@@ -5,10 +5,10 @@
 # This is a pre requisite for CPU auto-scaling :)
 #
 
-OSE_MASTER="openshift.example.com"
+OSE_MASTER="metrics.sokylin.com.cn"
 LIBDIR="../libs"
 CONFDIR="../conf"
-USER="demo"
+USER="admin"
 MDSA="metrics-deployer-service-account.yml"
 PROJECT="openshift-infra"
 
@@ -66,7 +66,7 @@ run_cmd echo "Use auto-generated certs for trust..."
 run_cmd run "oc secrets new metrics-deployer nothing=/dev/null"
 
 METRICS="metrics.yaml"
-METRICS_TEMPLATE="/usr/share/ansible/openshift-ansible/roles/openshift_examples/files/examples/infrastructure-templates/enterprise/metrics-deployer.yaml"
+METRICS_TEMPLATE="/usr/share/openshift/examples/infrastructure-templates/origin/metrics-deployer.yaml"
 
 echo "Ensuring we have a metrics config file..."
 if [ ! -r ${CONFDIR}/{METRICS} ]
@@ -78,7 +78,7 @@ then
 fi
 
 run_cmd echo "Setting up Hawkular metrics...this will run for some time in the background..."
-run_cmd run "oc process -f ${CONFDIR}/${METRICS} -v IMAGE_PREFIX=openshift3/,IMAGE_VERSION=latest,HAWKULAR_METRICS_HOSTNAME=${OSE_MASTER},USE_PERSISTENT_STORAGE=false | oc create -f -"
+run_cmd run "oc process -f ${CONFDIR}/${METRICS} -v HAWKULAR_METRICS_HOSTNAME=${OSE_MASTER},USE_PERSISTENT_STORAGE=false | oc create -f -"
 
 OSE_MASTER_CONFIG=/etc/origin/master/master-config.yaml
 TIMESTAMP="`date +%d%m%y_%m%S`"
@@ -93,6 +93,6 @@ then
 fi
 
 echo "Restating Openshift Master..."
-systemctl restart atomic-openshift-master 
+systemctl restart origin-master 
 
 echo "WE SHOULD BE DONE HERE!"
